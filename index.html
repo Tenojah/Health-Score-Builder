@@ -93,6 +93,11 @@ td.num{font-variant-numeric:tabular-nums}
 #msg{min-height:22px;font-size:14px;margin:0}
 #msg.err{color:var(--red)}
 #msg.ok{color:var(--grn)}
+.howto{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 22px;margin:0 0 24px}
+.howto summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:16px;font-weight:600}
+.howto ol{margin:0 0 18px;padding-left:22px;display:grid;gap:8px;font-size:14px;color:var(--muted)}
+.howto li b{color:var(--ink)}
+.howto code{font-size:13px;color:var(--ink);background:var(--panel-2);padding:2px 6px;border-radius:4px}
 .privacy{font-size:13px;color:var(--muted);margin:24px 0 0}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
@@ -113,6 +118,16 @@ td.num{font-variant-numeric:tabular-nums}
     <input class="sr" id="csvFile" type="file" accept=".csv,text/csv">
   </div>
 </header>
+
+<details class="howto" open>
+  <summary>Comment utiliser l'outil (30 secondes)</summary>
+  <ol>
+    <li><b>Réglez les pondérations.</b> Augmentez les indicateurs qui comptent le plus pour votre activité : l'usage produit pour un SaaS à la consommation, l'engagement du sponsor pour de gros contrats annuels.</li>
+    <li><b>Fixez vos seuils.</b> Par défaut, un score sous 60 est rouge et à partir de 80 il est vert. Adaptez-les à votre portefeuille.</li>
+    <li><b>Lisez le tableau.</b> Les comptes à risque remontent en premier. Le facteur principal indique ce qui tire le score vers le bas, et le playbook propose la première action à lancer.</li>
+    <li><b>Importez vos comptes.</b> Téléchargez le modèle CSV, remplissez <code>account</code>, <code>arr</code> et les 5 scores de 0 à 100 (<code>usage</code>, <code>adoption</code>, <code>nps</code>, <code>tickets</code>, <code>sponsor</code>), puis importez-le. Les données restent dans votre navigateur.</li>
+  </ol>
+</details>
 
 <p id="msg" role="status" aria-live="polite"></p>
 
