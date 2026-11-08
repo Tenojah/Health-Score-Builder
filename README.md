@@ -1,25 +1,25 @@
 # Health Score Builder
 
-Outil du CS Lab : pondérez vos indicateurs de santé client, repérez les comptes à risque et obtenez le playbook recommandé.
+A CS Lab tool: weight your customer health indicators, spot at-risk accounts and get the recommended playbook.
 
-## Fonctionnement
+## How it works
 
-- Score = moyenne pondérée de 5 indicateurs (usage, adoption, NPS/CSAT, tickets, engagement du sponsor), de 0 à 100.
-- Seuils réglables : rouge sous 60, vert à partir de 80 (par défaut).
-- Le facteur principal est l'indicateur dont la pondération multipliée par l'écart à 100 est la plus forte.
-- Les playbooks sont déterminés par règle (statut et facteur principal).
-- Les données de démo sont fictives.
+- Score = weighted average of 5 indicators (usage, adoption, NPS/CSAT, tickets, executive sponsor engagement), from 0 to 100.
+- Adjustable thresholds: red below 60, green at 80 or above (defaults).
+- The main factor is the indicator with the highest weight multiplied by its gap to 100.
+- Playbooks are rule-based (status and main factor).
+- Demo data is fictional.
 
-## Import CSV
+## CSV import
 
-Colonnes obligatoires : `account, arr, usage, adoption, nps, tickets, sponsor` (scores de 0 à 100).
-Colonnes facultatives : `tier, score_30j`. Séparateur virgule ou point-virgule. 1 Mo et 2 000 lignes maximum.
-Un modèle est téléchargeable depuis l'outil.
+Required columns: `account, arr, usage, adoption, nps, tickets, sponsor` (scores from 0 to 100).
+Optional columns: `tier, score_30j` (score 30 days ago). Comma or semicolon separator. 1 MB and 2,000 rows maximum.
+A template can be downloaded from the tool.
 
-## Confidentialité
+## Privacy
 
-Tout le calcul se fait dans le navigateur. Aucune donnée n'est envoyée à un serveur, et la politique CSP du fichier `netlify.toml` bloque les connexions sortantes.
+All calculation happens in the browser. No data is sent to a server, and the CSP in `netlify.toml` blocks outgoing connections.
 
-## Déploiement
+## Deployment
 
-Site statique, sans build : publier le dossier tel quel sur Netlify (glisser-déposer ou dépôt Git, répertoire de publication `.`).
+Static site, no build step: publish the folder as is on Netlify (drag and drop or Git repository, publish directory `.`).

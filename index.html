@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Health Score Builder</title>
-<meta name="description" content="Pondérez vos indicateurs, repérez les comptes à risque et activez le bon playbook. Les données restent dans votre navigateur.">
+<meta name="description" content="Weight your indicators, spot at-risk accounts and trigger the right playbook. Your data stays in your browser.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
@@ -107,25 +107,25 @@ td.num{font-variant-numeric:tabular-nums}
 
 <header class="top">
   <div>
-    <p class="eyebrow">CS Lab · Outil 1</p>
+    <p class="eyebrow">CS Lab · Tool 1</p>
     <h1>Health Score Builder</h1>
-    <p class="sub">Pondérez vos indicateurs, repérez les comptes à risque, activez le bon playbook.</p>
+    <p class="sub">Weight your indicators, spot at-risk accounts, trigger the right playbook.</p>
   </div>
   <div class="actions">
-    <span class="tag" id="sourceTag">Démo · données synthétiques</span>
-    <button class="btn" id="tplBtn" type="button">Modèle CSV</button>
-    <label class="btn primary" for="csvFile">Importer un CSV</label>
+    <span class="tag" id="sourceTag">Demo · synthetic data</span>
+    <button class="btn" id="tplBtn" type="button">CSV template</button>
+    <label class="btn primary" for="csvFile">Import a CSV</label>
     <input class="sr" id="csvFile" type="file" accept=".csv,text/csv">
   </div>
 </header>
 
 <details class="howto" open>
-  <summary>Comment utiliser l'outil (30 secondes)</summary>
+  <summary>How to use the tool (30 seconds)</summary>
   <ol>
-    <li><b>Réglez les pondérations.</b> Augmentez les indicateurs qui comptent le plus pour votre activité : l'usage produit pour un SaaS à la consommation, l'engagement du sponsor pour de gros contrats annuels.</li>
-    <li><b>Fixez vos seuils.</b> Par défaut, un score sous 60 est rouge et à partir de 80 il est vert. Adaptez-les à votre portefeuille.</li>
-    <li><b>Lisez le tableau.</b> Les comptes à risque remontent en premier. Le facteur principal indique ce qui tire le score vers le bas, et le playbook propose la première action à lancer.</li>
-    <li><b>Importez vos comptes.</b> Téléchargez le modèle CSV, remplissez <code>account</code>, <code>arr</code> et les 5 scores de 0 à 100 (<code>usage</code>, <code>adoption</code>, <code>nps</code>, <code>tickets</code>, <code>sponsor</code>), puis importez-le. Les données restent dans votre navigateur.</li>
+    <li><b>Set the weights.</b> Raise the indicators that matter most for your business: product usage for a consumption-based SaaS, executive sponsor engagement for large annual contracts.</li>
+    <li><b>Set your thresholds.</b> By default a score below 60 is red and 80 or above is green. Adapt them to your portfolio.</li>
+    <li><b>Read the table.</b> At-risk accounts come first. The main factor shows what pulls the score down, and the playbook suggests the first action to launch.</li>
+    <li><b>Import your accounts.</b> Download the CSV template, fill in <code>account</code>, <code>arr</code> and the 5 scores from 0 to 100 (<code>usage</code>, <code>adoption</code>, <code>nps</code>, <code>tickets</code>, <code>sponsor</code>), then import it. Your data stays in your browser.</li>
   </ol>
 </details>
 
@@ -134,44 +134,44 @@ td.num{font-variant-numeric:tabular-nums}
 <div class="layout">
   <aside class="panel">
     <div class="card">
-      <h2>Pondération des indicateurs</h2>
+      <h2>Indicator weights</h2>
       <div id="sliders"></div>
       <div class="total"><span>Total</span><b id="totalW">100%</b></div>
-      <p class="note" id="totalNote">Les pondérations sont ramenées à 100 % au calcul.</p>
+      <p class="note" id="totalNote">Weights are normalized to 100% when scoring.</p>
 
-      <h2>Seuils</h2>
+      <h2>Thresholds</h2>
       <div class="thr">
-        <label for="tRed"><span class="pill red">Rouge</span><span>Score inférieur à <input id="tRed" type="number" min="0" max="100" value="60"></span></label>
-        <label for="tGreen"><span class="pill green">Vert</span><span>Score supérieur ou égal à <input id="tGreen" type="number" min="0" max="100" value="80"></span></label>
+        <label for="tRed"><span class="pill red">Red</span><span>Score below <input id="tRed" type="number" min="0" max="100" value="60"></span></label>
+        <label for="tGreen"><span class="pill green">Green</span><span>Score at or above <input id="tGreen" type="number" min="0" max="100" value="80"></span></label>
       </div>
-      <p class="note" style="margin-top:12px">Entre les deux : orange.</p>
-      <button class="btn" id="resetBtn" type="button">Réinitialiser</button>
+      <p class="note" style="margin-top:12px">In between: amber.</p>
+      <button class="btn" id="resetBtn" type="button">Reset</button>
     </div>
   </aside>
 
-  <section class="main" aria-label="Résultats">
+  <section class="main" aria-label="Results">
     <div class="kpis">
-      <div class="kpi"><div class="l">Comptes scorés</div><div class="v" id="kCount">0</div></div>
-      <div class="kpi"><div class="l">ARR du portefeuille</div><div class="v" id="kArr">0</div></div>
-      <div class="kpi"><div class="l">Comptes en rouge</div><div class="v r" id="kRed">0</div></div>
-      <div class="kpi"><div class="l">ARR en rouge</div><div class="v r" id="kRedArr">0</div></div>
+      <div class="kpi"><div class="l">Accounts scored</div><div class="v" id="kCount">0</div></div>
+      <div class="kpi"><div class="l">Portfolio ARR</div><div class="v" id="kArr">0</div></div>
+      <div class="kpi"><div class="l">Red accounts</div><div class="v r" id="kRed">0</div></div>
+      <div class="kpi"><div class="l">Red ARR</div><div class="v r" id="kRedArr">0</div></div>
     </div>
 
     <div class="card">
       <div class="tablehead">
-        <h2>Comptes à traiter en priorité</h2>
-        <span>Triés par statut, puis par ARR</span>
+        <h2>Accounts to handle first</h2>
+        <span>Sorted by status, then ARR</span>
       </div>
       <div class="scroll">
         <table>
           <thead>
             <tr>
-              <th scope="col">Compte</th>
+              <th scope="col">Account</th>
               <th scope="col">Tier</th>
               <th scope="col">ARR</th>
               <th scope="col">Score</th>
-              <th scope="col">30 jours</th>
-              <th scope="col">Facteur principal</th>
+              <th scope="col">30 days</th>
+              <th scope="col">Main factor</th>
               <th scope="col">Playbook</th>
             </tr>
           </thead>
@@ -182,7 +182,7 @@ td.num{font-variant-numeric:tabular-nums}
   </section>
 </div>
 
-<p class="privacy">Vos données ne quittent jamais votre navigateur : aucun envoi vers un serveur. Les comptes de la démo sont fictifs.</p>
+<p class="privacy">Your data never leaves your browser: nothing is sent to a server. Demo accounts are fictional.</p>
 </div>
 
 <script>
@@ -191,56 +191,56 @@ td.num{font-variant-numeric:tabular-nums}
 
   var FACTORS = ["usage", "adoption", "nps", "tickets", "sponsor"];
   var LABELS = {
-    usage: "Usage produit",
-    adoption: "Adoption des modules clés",
+    usage: "Product usage",
+    adoption: "Key module adoption",
     nps: "NPS / CSAT",
-    tickets: "Tickets et escalades",
-    sponsor: "Engagement du sponsor exécutif"
+    tickets: "Tickets and escalations",
+    sponsor: "Executive sponsor engagement"
   };
   var DRIVER_TEXT = {
-    usage: "Usage en baisse",
-    adoption: "Modules clés non activés",
-    nps: "Satisfaction faible",
-    tickets: "Escalades de support",
-    sponsor: "Sponsor peu engagé"
+    usage: "Usage declining",
+    adoption: "Key modules not activated",
+    nps: "Low satisfaction",
+    tickets: "Support escalations",
+    sponsor: "Executive sponsor disengaged"
   };
   var PLAYBOOKS = {
     red: {
-      usage: "Relance d'adoption urgente",
-      adoption: "Atelier d'activation",
-      nps: "Appel de rétablissement",
-      tickets: "Revue de support avec le Product",
-      sponsor: "Churn save exécutif"
+      usage: "Urgent adoption relaunch",
+      adoption: "Activation workshop",
+      nps: "Recovery call",
+      tickets: "Support review with Product",
+      sponsor: "Executive churn save"
     },
     orange: {
-      usage: "Campagne d'usage",
-      adoption: "Atelier d'activation",
-      nps: "Boucle de feedback client",
-      tickets: "Revue de support",
-      sponsor: "Point sponsor trimestriel"
+      usage: "Usage campaign",
+      adoption: "Activation workshop",
+      nps: "Customer feedback loop",
+      tickets: "Support review",
+      sponsor: "Quarterly sponsor check-in"
     }
   };
-  var STATUS_LABEL = { red: "Rouge", orange: "Orange", green: "Vert" };
+  var STATUS_LABEL = { red: "Red", orange: "Amber", green: "Green" };
   var STATUS_ORDER = { red: 0, orange: 1, green: 2 };
   var DEFAULT_WEIGHTS = { usage: 35, adoption: 20, nps: 15, tickets: 15, sponsor: 15 };
   var DEFAULT_THRESHOLDS = { red: 60, green: 80 };
   var MAX_ROWS = 2000;
   var MAX_BYTES = 1024 * 1024;
 
-  // Comptes fictifs : toute ressemblance avec une entreprise réelle est fortuite.
+  // Fictional accounts: any resemblance to a real company is coincidental.
   var DEMO = [
     { account: "Orion Logistics", tier: "Tier 1", arr: 210000, usage: 38, adoption: 45, nps: 50, tickets: 60, sponsor: 25, prev: 57 },
-    { account: "Kéra Immobilier", tier: "Tier 1", arr: 185000, usage: 48, adoption: 55, nps: 60, tickets: 70, sponsor: 45, prev: 61 },
+    { account: "Kera Real Estate", tier: "Tier 1", arr: 185000, usage: 48, adoption: 55, nps: 60, tickets: 70, sponsor: 45, prev: 61 },
     { account: "Atelier Nord Retail", tier: "Tier 1", arr: 260000, usage: 82, adoption: 78, nps: 75, tickets: 85, sponsor: 80, prev: 79 },
-    { account: "Lumen Santé Réseau", tier: "Tier 1", arr: 175000, usage: 85, adoption: 88, nps: 80, tickets: 82, sponsor: 90, prev: 85 },
+    { account: "Lumen Health Network", tier: "Tier 1", arr: 175000, usage: 85, adoption: 88, nps: 80, tickets: 82, sponsor: 90, prev: 85 },
     { account: "Helios Mobility", tier: "Tier 2", arr: 120000, usage: 70, adoption: 65, nps: 62, tickets: 40, sponsor: 60, prev: 67 },
-    { account: "Brasserie Vallée Group", tier: "Tier 2", arr: 140000, usage: 64, adoption: 58, nps: 55, tickets: 66, sponsor: 50, prev: 63 },
+    { account: "Vallee Brasserie Group", tier: "Tier 2", arr: 140000, usage: 64, adoption: 58, nps: 55, tickets: 66, sponsor: 50, prev: 63 },
     { account: "Maison Delorme", tier: "Tier 2", arr: 95000, usage: 75, adoption: 40, nps: 70, tickets: 80, sponsor: 72, prev: 71 },
     { account: "Cobalt Hospitality", tier: "Tier 2", arr: 110000, usage: 78, adoption: 72, nps: 68, tickets: 74, sponsor: 65, prev: 75 },
-    { account: "Piémont Franchises", tier: "Tier 2", arr: 88000, usage: 60, adoption: 50, nps: 58, tickets: 45, sponsor: 55, prev: 60 },
+    { account: "Piemont Franchises", tier: "Tier 2", arr: 88000, usage: 60, adoption: 50, nps: 58, tickets: 45, sponsor: 55, prev: 60 },
     { account: "Quartier Libre Stores", tier: "Tier 3", arr: 38000, usage: 90, adoption: 85, nps: 92, tickets: 88, sponsor: 80, prev: 82 },
     { account: "Nova Cycles", tier: "Tier 3", arr: 42000, usage: 52, adoption: 48, nps: 45, tickets: 55, sponsor: 40, prev: 55 },
-    { account: "Verdier Énergie", tier: "Tier 3", arr: 31000, usage: 88, adoption: 80, nps: 85, tickets: 90, sponsor: 70, prev: 84 }
+    { account: "Verdier Energy", tier: "Tier 3", arr: 31000, usage: 88, adoption: 80, nps: 85, tickets: 90, sponsor: 70, prev: 84 }
   ];
 
   function computeScore(acc, w) {
@@ -277,7 +277,7 @@ td.num{font-variant-numeric:tabular-nums}
   }
 
   function playbookFor(status, driver, score) {
-    if (status === "green") return score >= 85 ? "Candidat à l'expansion" : "Suivi standard";
+    if (status === "green") return score >= 85 ? "Expansion candidate" : "Standard monitoring";
     return PLAYBOOKS[status][driver];
   }
 
@@ -309,8 +309,8 @@ td.num{font-variant-numeric:tabular-nums}
   }
 
   function fmtMoney(v) {
-    if (v >= 1000000) return (v / 1000000).toFixed(1).replace(".", ",") + " M€";
-    return Math.round(v / 1000) + " k€";
+    if (v >= 1000000) return "€" + (v / 1000000).toFixed(1) + "M";
+    return "€" + Math.round(v / 1000) + "k";
   }
 
   function parseNumber(v) {
@@ -322,7 +322,7 @@ td.num{font-variant-numeric:tabular-nums}
     text = String(text).replace(/^﻿/, "");
     var lines = text.split(/\r?\n/).filter(function (l) { return l.trim() !== ""; });
     if (lines.length < 2) {
-      return { accounts: [], skipped: 0, error: "Le fichier doit contenir un en-tête et au moins une ligne." };
+      return { accounts: [], skipped: 0, error: "The file must contain a header and at least one row." };
     }
     var delim = lines[0].split(";").length > lines[0].split(",").length ? ";" : ",";
 
@@ -346,7 +346,7 @@ td.num{font-variant-numeric:tabular-nums}
     var need = ["account", "arr", "usage", "adoption", "nps", "tickets", "sponsor"];
     var missing = need.filter(function (n) { return head.indexOf(n) === -1; });
     if (missing.length) {
-      return { accounts: [], skipped: 0, error: "Colonnes manquantes : " + missing.join(", ") + "." };
+      return { accounts: [], skipped: 0, error: "Missing columns: " + missing.join(", ") + "." };
     }
     var idx = {};
     head.forEach(function (h, i) { idx[h] = i; });
@@ -375,7 +375,7 @@ td.num{font-variant-numeric:tabular-nums}
     }
     if (lines.length - 1 > MAX_ROWS) skipped += lines.length - 1 - MAX_ROWS;
     if (!accounts.length) {
-      return { accounts: [], skipped: skipped, error: "Aucune ligne valide : vérifiez que les scores sont entre 0 et 100." };
+      return { accounts: [], skipped: skipped, error: "No valid row: check that scores are between 0 and 100." };
     }
     return { accounts: accounts, skipped: skipped, error: null };
   }
@@ -462,13 +462,13 @@ td.num{font-variant-numeric:tabular-nums}
     $("totalW").textContent = total + "%";
     var note = $("totalNote");
     if (total === 0) {
-      note.textContent = "Total à 0 % : augmentez au moins une pondération.";
+      note.textContent = "Total is 0%: raise at least one weight.";
       note.className = "note warn";
     } else if (total !== 100) {
-      note.textContent = "Les pondérations sont ramenées à 100 % au calcul.";
+      note.textContent = "Weights are normalized to 100% when scoring.";
       note.className = "note warn";
     } else {
-      note.textContent = "Les pondérations sont ramenées à 100 % au calcul.";
+      note.textContent = "Weights are normalized to 100% when scoring.";
       note.className = "note";
     }
 
@@ -485,43 +485,43 @@ td.num{font-variant-numeric:tabular-nums}
     results.forEach(function (r) {
       var tr = document.createElement("tr");
       tr.appendChild(td(r.account, "name"));
-      tr.appendChild(td(r.tier || "n/d"));
+      tr.appendChild(td(r.tier || "n/a"));
       tr.appendChild(td(fmtMoney(r.arr), "num"));
       var cs = document.createElement("td");
       var pill = el("span", "pill " + r.status, r.score + " · " + STATUS_LABEL[r.status]);
       cs.appendChild(pill);
       tr.appendChild(cs);
       var dText, dCls;
-      if (r.delta === null) { dText = "n/d"; dCls = "d-nul"; }
+      if (r.delta === null) { dText = "n/a"; dCls = "d-nul"; }
       else if (r.delta > 0) { dText = "+" + r.delta + " pts"; dCls = "d-pos"; }
       else if (r.delta < 0) { dText = r.delta + " pts"; dCls = "d-neg"; }
-      else { dText = "0 pt"; dCls = "d-nul"; }
+      else { dText = "0 pts"; dCls = "d-nul"; }
       tr.appendChild(td(dText, dCls + " num"));
-      tr.appendChild(td(r.status === "green" ? "Aucun point d'attention" : DRIVER_TEXT[r.driver]));
+      tr.appendChild(td(r.status === "green" ? "No attention point" : DRIVER_TEXT[r.driver]));
       tr.appendChild(td(r.playbook));
       body.appendChild(tr);
     });
 
     var tag = $("sourceTag");
-    tag.textContent = state.live ? "Vos données (CSV)" : "Démo · données synthétiques";
+    tag.textContent = state.live ? "Your data (CSV)" : "Demo · synthetic data";
     tag.className = state.live ? "tag live" : "tag";
   }
 
   function handleFile(file) {
     if (!file) return;
     if (file.size > MAX_BYTES) {
-      setMsg("Fichier trop volumineux (1 Mo maximum).", "err");
+      setMsg("File too large (1 MB maximum).", "err");
       return;
     }
     var reader = new FileReader();
-    reader.onerror = function () { setMsg("Lecture du fichier impossible.", "err"); };
+    reader.onerror = function () { setMsg("Could not read the file.", "err"); };
     reader.onload = function () {
       var res = parseCSV(reader.result);
       if (res.error) { setMsg(res.error, "err"); return; }
       state.accounts = res.accounts;
       state.live = true;
-      var msg = res.accounts.length + " comptes importés.";
-      if (res.skipped) msg += " " + res.skipped + " ligne(s) ignorée(s) car invalides.";
+      var msg = res.accounts.length + " accounts imported.";
+      if (res.skipped) msg += " " + res.skipped + " invalid row(s) skipped.";
       setMsg(msg, "ok");
       render();
     };
@@ -530,13 +530,13 @@ td.num{font-variant-numeric:tabular-nums}
 
   function downloadTemplate() {
     var csv = "account,tier,arr,usage,adoption,nps,tickets,sponsor,score_30j\n" +
-      "Exemple SA,Tier 1,150000,70,60,65,80,55,68\n" +
-      "Exemple SAS,Tier 2,80000,45,50,40,60,35,52\n";
+      "Example Inc,Tier 1,150000,70,60,65,80,55,68\n" +
+      "Example Ltd,Tier 2,80000,45,50,40,60,35,52\n";
     var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     var url = URL.createObjectURL(blob);
     var a = document.createElement("a");
     a.href = url;
-    a.download = "modele-health-score.csv";
+    a.download = "health-score-template.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
