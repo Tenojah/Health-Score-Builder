@@ -93,6 +93,15 @@ td.num{font-variant-numeric:tabular-nums}
 #msg{min-height:22px;font-size:14px;margin:0}
 #msg.err{color:var(--red)}
 #msg.ok{color:var(--grn)}
+.about{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px 10px;margin:0 0 20px}
+.about h2{font-family:'Space Grotesk','Inter',sans-serif;font-size:26px;letter-spacing:-.01em;margin:0 0 14px}
+.about h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+.about p{margin:0 0 10px;font-size:15px}
+.about .ab-lead{font-size:17px;font-weight:600}
+.about .ab-step b{font-size:15px}
+.about .ab-step p{color:var(--muted);margin:2px 0 12px}
+.about a{color:var(--accent);font-weight:600}
+.about .ab-ver{color:var(--muted);font-size:13px}
 .howto{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:0 22px;margin:0 0 24px}
 .howto summary{cursor:pointer;min-height:44px;display:flex;align-items:center;font-size:16px;font-weight:600}
 .howto ol{margin:0 0 18px;padding-left:22px;display:grid;gap:8px;font-size:14px;color:var(--muted)}
@@ -118,6 +127,21 @@ td.num{font-variant-numeric:tabular-nums}
     <input class="sr" id="csvFile" type="file" accept=".csv,text/csv">
   </div>
 </header>
+
+<section class="about" aria-labelledby="aboutTitle">
+  <h2 id="aboutTitle">About</h2>
+  <h3>The project</h3>
+  <p class="ab-lead">Weight your health indicators, spot the accounts at risk, and launch the right playbook before renewal.</p>
+  <h3>How does it work?</h3>
+    <div class="ab-step"><b>1. You set the weights</b><p>Pick what matters for your business: usage, adoption, NPS, tickets, sponsor engagement.</p></div>
+    <div class="ab-step"><b>2. The score ranks your accounts</b><p>Red, amber and green status, with the main factor pulling each score down.</p></div>
+    <div class="ab-step"><b>3. You launch the playbook</b><p>Each at-risk account gets a suggested first action, ready to act on.</p></div>
+  <h3>Made by</h3>
+  <p>Built by Jonathan Cerf, Head of CS, as part of the CS Lab.</p>
+  <p><a href="https://www.linkedin.com/in/jonathan-cerf-csm/" target="_blank" rel="noopener noreferrer">Find me on LinkedIn →</a></p>
+  <h3>Version</h3>
+  <p class="ab-ver">Health Score Builder · v1.0 · Runs in your browser, your data is never sent anywhere · Deployed on Netlify</p>
+</section>
 
 <details class="howto" open>
   <summary>How to use the tool (30 seconds)</summary>
