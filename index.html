@@ -93,6 +93,11 @@ td.num{font-variant-numeric:tabular-nums}
 #msg{min-height:22px;font-size:14px;margin:0}
 #msg.err{color:var(--red)}
 #msg.ok{color:var(--grn)}
+dialog.aboutDlg{width:min(680px,calc(100% - 32px));max-height:calc(100vh - 48px);padding:0;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);overflow:auto}
+dialog.aboutDlg::backdrop{background:rgba(0,0,0,.6)}
+dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
+.aboutClose{position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:1;width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
+.aboutClose:hover{filter:brightness(.93)}
 .about{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px 10px;margin:0 0 20px}
 .about h2{font-family:'Space Grotesk','Inter',sans-serif;font-size:26px;letter-spacing:-.01em;margin:0 0 14px}
 .about h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
@@ -125,9 +130,12 @@ td.num{font-variant-numeric:tabular-nums}
     <button class="btn" id="tplBtn" type="button">CSV template</button>
     <label class="btn primary" for="csvFile">Import a CSV</label>
     <input class="sr" id="csvFile" type="file" accept=".csv,text/csv">
+    <button class="btn" id="aboutBtn" type="button" aria-haspopup="dialog">About</button>
   </div>
 </header>
 
+<dialog class="aboutDlg" id="aboutDlg" aria-label="About">
+  <button class="aboutClose" id="aboutClose" type="button" aria-label="Close">×</button>
 <section class="about" aria-labelledby="aboutTitle">
   <h2 id="aboutTitle">About</h2>
   <h3>The project</h3>
@@ -142,6 +150,8 @@ td.num{font-variant-numeric:tabular-nums}
   <h3>Version</h3>
   <p class="ab-ver">Health Score Builder · v1.0 · Runs in your browser, your data is never sent anywhere · Deployed on Netlify</p>
 </section>
+</dialog>
+
 
 <details class="howto" open>
   <summary>How to use the tool (30 seconds)</summary>
@@ -588,6 +598,15 @@ td.num{font-variant-numeric:tabular-nums}
   $("resetBtn").addEventListener("click", reset);
   render();
 })(this);
+
+(function () {
+  var dlg = document.getElementById("aboutDlg"), btn = document.getElementById("aboutBtn");
+  if (!dlg || !btn || typeof dlg.showModal !== "function") return;
+  btn.addEventListener("click", function () { dlg.showModal(); });
+  document.getElementById("aboutClose").addEventListener("click", function () { dlg.close(); });
+  dlg.addEventListener("click", function (e) { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener("close", function () { btn.focus(); });
+})();
 </script>
 </body>
 </html>
