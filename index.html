@@ -1,0 +1,554 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Health Score Builder</title>
+<meta name="description" content="Pondérez vos indicateurs, repérez les comptes à risque et activez le bon playbook. Les données restent dans votre navigateur.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1620;
+  --panel:#16212E;
+  --panel-2:#1C2938;
+  --line:#2A394B;
+  --ink:#E9E4D6;
+  --muted:#9AA7B5;
+  --accent:#3FB8AF;
+  --red-bg:#3A1A17;--red:#FF9A8B;
+  --amb-bg:#3A2C10;--amb:#F2C36B;
+  --grn-bg:#16301F;--grn:#8FD39A;
+}
+*{box-sizing:border-box}
+html{color-scheme:dark}
+body{
+  margin:0;
+  font-family:'Inter',system-ui,sans-serif;
+  color:var(--ink);
+  background-color:var(--bg);
+  background-image:
+    linear-gradient(rgba(233,228,214,.035) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(233,228,214,.035) 1px,transparent 1px);
+  background-size:32px 32px;
+  line-height:1.5;
+}
+.wrap{max-width:1360px;margin:0 auto;padding:32px 16px 48px}
+@media(min-width:720px){.wrap{padding:40px 40px 56px}}
+header.top{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+h1{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(28px,4vw,38px);line-height:1.1;letter-spacing:-.02em;margin:0 0 8px}
+.sub{margin:0;color:var(--muted);font-size:15px;max-width:60ch}
+.actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.tag{font-size:13px;font-weight:600;color:var(--amb);background:var(--amb-bg);padding:8px 14px;border-radius:999px}
+.tag.live{color:var(--grn);background:var(--grn-bg)}
+.btn{
+  font-family:inherit;font-size:14px;font-weight:600;
+  min-height:44px;padding:0 20px;border-radius:8px;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  border:2px solid var(--accent);color:var(--ink);background:transparent;
+}
+.btn.primary{background:var(--accent);color:#0E1620}
+.btn:hover{filter:brightness(1.1)}
+:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.layout{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
+aside.panel{flex:0 0 340px;max-width:100%;width:100%}
+@media(min-width:1000px){aside.panel{width:340px}}
+section.main{flex:1 1 560px;min-width:0;display:flex;flex-direction:column;gap:20px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px}
+.card h2{font-size:16px;font-weight:600;margin:0 0 16px}
+.field{margin-bottom:16px}
+.field .row{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px}
+.field .row b{font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--accent);min-height:24px}
+.total{display:flex;justify-content:space-between;font-size:14px;padding-top:14px;border-top:1px solid var(--line);margin-bottom:6px}
+.note{font-size:13px;color:var(--muted);margin:0 0 18px}
+.warn{color:var(--amb)}
+.thr{display:flex;flex-direction:column;gap:12px;margin-top:6px}
+.thr label{display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:14px}
+.thr input{width:84px;min-height:44px;font-family:inherit;font-size:15px;font-weight:600;text-align:right;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);border-radius:8px;padding:0 12px}
+.pill{display:inline-block;font-weight:700;font-size:13px;padding:4px 10px;border-radius:999px;white-space:nowrap}
+.pill.red{background:var(--red-bg);color:var(--red)}
+.pill.orange{background:var(--amb-bg);color:var(--amb)}
+.pill.green{background:var(--grn-bg);color:var(--grn)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpi .l{font-size:13px;color:var(--muted)}
+.kpi .v{font-family:'Space Grotesk','Inter',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .v.r{color:var(--red)}
+.tablehead{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.tablehead h2{margin:0}
+.tablehead span{font-size:13px;color:var(--muted)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:760px}
+th{text-align:left;font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:8px 10px 10px 0;border-bottom:1px solid var(--line)}
+td{padding:12px 10px 12px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+td.name{font-weight:600}
+td.num{font-variant-numeric:tabular-nums}
+.d-neg{color:var(--red);font-weight:600}
+.d-pos{color:var(--grn);font-weight:600}
+.d-nul{color:var(--muted);font-weight:600}
+#msg{min-height:22px;font-size:14px;margin:0}
+#msg.err{color:var(--red)}
+#msg.ok{color:var(--grn)}
+.privacy{font-size:13px;color:var(--muted);margin:24px 0 0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div>
+    <p class="eyebrow">CS Lab · Outil 1</p>
+    <h1>Health Score Builder</h1>
+    <p class="sub">Pondérez vos indicateurs, repérez les comptes à risque, activez le bon playbook.</p>
+  </div>
+  <div class="actions">
+    <span class="tag" id="sourceTag">Démo · données synthétiques</span>
+    <button class="btn" id="tplBtn" type="button">Modèle CSV</button>
+    <label class="btn primary" for="csvFile">Importer un CSV</label>
+    <input class="sr" id="csvFile" type="file" accept=".csv,text/csv">
+  </div>
+</header>
+
+<p id="msg" role="status" aria-live="polite"></p>
+
+<div class="layout">
+  <aside class="panel">
+    <div class="card">
+      <h2>Pondération des indicateurs</h2>
+      <div id="sliders"></div>
+      <div class="total"><span>Total</span><b id="totalW">100%</b></div>
+      <p class="note" id="totalNote">Les pondérations sont ramenées à 100 % au calcul.</p>
+
+      <h2>Seuils</h2>
+      <div class="thr">
+        <label for="tRed"><span class="pill red">Rouge</span><span>Score inférieur à <input id="tRed" type="number" min="0" max="100" value="60"></span></label>
+        <label for="tGreen"><span class="pill green">Vert</span><span>Score supérieur ou égal à <input id="tGreen" type="number" min="0" max="100" value="80"></span></label>
+      </div>
+      <p class="note" style="margin-top:12px">Entre les deux : orange.</p>
+      <button class="btn" id="resetBtn" type="button">Réinitialiser</button>
+    </div>
+  </aside>
+
+  <section class="main" aria-label="Résultats">
+    <div class="kpis">
+      <div class="kpi"><div class="l">Comptes scorés</div><div class="v" id="kCount">0</div></div>
+      <div class="kpi"><div class="l">ARR du portefeuille</div><div class="v" id="kArr">0</div></div>
+      <div class="kpi"><div class="l">Comptes en rouge</div><div class="v r" id="kRed">0</div></div>
+      <div class="kpi"><div class="l">ARR en rouge</div><div class="v r" id="kRedArr">0</div></div>
+    </div>
+
+    <div class="card">
+      <div class="tablehead">
+        <h2>Comptes à traiter en priorité</h2>
+        <span>Triés par statut, puis par ARR</span>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Compte</th>
+              <th scope="col">Tier</th>
+              <th scope="col">ARR</th>
+              <th scope="col">Score</th>
+              <th scope="col">30 jours</th>
+              <th scope="col">Facteur principal</th>
+              <th scope="col">Playbook</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</div>
+
+<p class="privacy">Vos données ne quittent jamais votre navigateur : aucun envoi vers un serveur. Les comptes de la démo sont fictifs.</p>
+</div>
+
+<script>
+(function (root) {
+  "use strict";
+
+  var FACTORS = ["usage", "adoption", "nps", "tickets", "sponsor"];
+  var LABELS = {
+    usage: "Usage produit",
+    adoption: "Adoption des modules clés",
+    nps: "NPS / CSAT",
+    tickets: "Tickets et escalades",
+    sponsor: "Engagement du sponsor exécutif"
+  };
+  var DRIVER_TEXT = {
+    usage: "Usage en baisse",
+    adoption: "Modules clés non activés",
+    nps: "Satisfaction faible",
+    tickets: "Escalades de support",
+    sponsor: "Sponsor peu engagé"
+  };
+  var PLAYBOOKS = {
+    red: {
+      usage: "Relance d'adoption urgente",
+      adoption: "Atelier d'activation",
+      nps: "Appel de rétablissement",
+      tickets: "Revue de support avec le Product",
+      sponsor: "Churn save exécutif"
+    },
+    orange: {
+      usage: "Campagne d'usage",
+      adoption: "Atelier d'activation",
+      nps: "Boucle de feedback client",
+      tickets: "Revue de support",
+      sponsor: "Point sponsor trimestriel"
+    }
+  };
+  var STATUS_LABEL = { red: "Rouge", orange: "Orange", green: "Vert" };
+  var STATUS_ORDER = { red: 0, orange: 1, green: 2 };
+  var DEFAULT_WEIGHTS = { usage: 35, adoption: 20, nps: 15, tickets: 15, sponsor: 15 };
+  var DEFAULT_THRESHOLDS = { red: 60, green: 80 };
+  var MAX_ROWS = 2000;
+  var MAX_BYTES = 1024 * 1024;
+
+  // Comptes fictifs : toute ressemblance avec une entreprise réelle est fortuite.
+  var DEMO = [
+    { account: "Orion Logistics", tier: "Tier 1", arr: 210000, usage: 38, adoption: 45, nps: 50, tickets: 60, sponsor: 25, prev: 57 },
+    { account: "Kéra Immobilier", tier: "Tier 1", arr: 185000, usage: 48, adoption: 55, nps: 60, tickets: 70, sponsor: 45, prev: 61 },
+    { account: "Atelier Nord Retail", tier: "Tier 1", arr: 260000, usage: 82, adoption: 78, nps: 75, tickets: 85, sponsor: 80, prev: 79 },
+    { account: "Lumen Santé Réseau", tier: "Tier 1", arr: 175000, usage: 85, adoption: 88, nps: 80, tickets: 82, sponsor: 90, prev: 85 },
+    { account: "Helios Mobility", tier: "Tier 2", arr: 120000, usage: 70, adoption: 65, nps: 62, tickets: 40, sponsor: 60, prev: 67 },
+    { account: "Brasserie Vallée Group", tier: "Tier 2", arr: 140000, usage: 64, adoption: 58, nps: 55, tickets: 66, sponsor: 50, prev: 63 },
+    { account: "Maison Delorme", tier: "Tier 2", arr: 95000, usage: 75, adoption: 40, nps: 70, tickets: 80, sponsor: 72, prev: 71 },
+    { account: "Cobalt Hospitality", tier: "Tier 2", arr: 110000, usage: 78, adoption: 72, nps: 68, tickets: 74, sponsor: 65, prev: 75 },
+    { account: "Piémont Franchises", tier: "Tier 2", arr: 88000, usage: 60, adoption: 50, nps: 58, tickets: 45, sponsor: 55, prev: 60 },
+    { account: "Quartier Libre Stores", tier: "Tier 3", arr: 38000, usage: 90, adoption: 85, nps: 92, tickets: 88, sponsor: 80, prev: 82 },
+    { account: "Nova Cycles", tier: "Tier 3", arr: 42000, usage: 52, adoption: 48, nps: 45, tickets: 55, sponsor: 40, prev: 55 },
+    { account: "Verdier Énergie", tier: "Tier 3", arr: 31000, usage: 88, adoption: 80, nps: 85, tickets: 90, sponsor: 70, prev: 84 }
+  ];
+
+  function computeScore(acc, w) {
+    var tw = 0, s = 0, i, f;
+    for (i = 0; i < FACTORS.length; i++) {
+      f = FACTORS[i];
+      tw += w[f];
+      s += w[f] * acc[f];
+    }
+    return tw > 0 ? s / tw : 0;
+  }
+
+  function normThresholds(t) {
+    var red = Math.min(100, Math.max(0, Number(t.red) || 0));
+    var green = Math.min(100, Math.max(0, Number(t.green) || 0));
+    if (green < red) green = red;
+    return { red: red, green: green };
+  }
+
+  function statusOf(score, t) {
+    if (score < t.red) return "red";
+    if (score >= t.green) return "green";
+    return "orange";
+  }
+
+  function mainDriver(acc, w) {
+    var best = FACTORS[0], bv = -1, i, f, v;
+    for (i = 0; i < FACTORS.length; i++) {
+      f = FACTORS[i];
+      v = w[f] * (100 - acc[f]);
+      if (v > bv) { bv = v; best = f; }
+    }
+    return best;
+  }
+
+  function playbookFor(status, driver, score) {
+    if (status === "green") return score >= 85 ? "Candidat à l'expansion" : "Suivi standard";
+    return PLAYBOOKS[status][driver];
+  }
+
+  function evaluate(accounts, weights, thresholds) {
+    var t = normThresholds(thresholds);
+    return accounts.map(function (a) {
+      var score = Math.round(computeScore(a, weights));
+      var status = statusOf(score, t);
+      var driver = mainDriver(a, weights);
+      var delta = (a.prev === null || a.prev === undefined) ? null : score - a.prev;
+      return {
+        account: a.account, tier: a.tier, arr: a.arr,
+        score: score, status: status, driver: driver, delta: delta,
+        playbook: playbookFor(status, driver, score)
+      };
+    }).sort(function (x, y) {
+      if (STATUS_ORDER[x.status] !== STATUS_ORDER[y.status]) return STATUS_ORDER[x.status] - STATUS_ORDER[y.status];
+      return y.arr - x.arr;
+    });
+  }
+
+  function summarize(results) {
+    var s = { count: results.length, arr: 0, red: 0, redArr: 0 };
+    results.forEach(function (r) {
+      s.arr += r.arr;
+      if (r.status === "red") { s.red += 1; s.redArr += r.arr; }
+    });
+    return s;
+  }
+
+  function fmtMoney(v) {
+    if (v >= 1000000) return (v / 1000000).toFixed(1).replace(".", ",") + " M€";
+    return Math.round(v / 1000) + " k€";
+  }
+
+  function parseNumber(v) {
+    var n = parseFloat(String(v).replace(/\s/g, "").replace(",", "."));
+    return isFinite(n) ? n : NaN;
+  }
+
+  function parseCSV(text) {
+    text = String(text).replace(/^﻿/, "");
+    var lines = text.split(/\r?\n/).filter(function (l) { return l.trim() !== ""; });
+    if (lines.length < 2) {
+      return { accounts: [], skipped: 0, error: "Le fichier doit contenir un en-tête et au moins une ligne." };
+    }
+    var delim = lines[0].split(";").length > lines[0].split(",").length ? ";" : ",";
+
+    function split(line) {
+      var out = [], cur = "", q = false, i, c;
+      for (i = 0; i < line.length; i++) {
+        c = line.charAt(i);
+        if (c === '"') {
+          if (q && line.charAt(i + 1) === '"') { cur += '"'; i++; } else { q = !q; }
+        } else if (c === delim && !q) {
+          out.push(cur); cur = "";
+        } else {
+          cur += c;
+        }
+      }
+      out.push(cur);
+      return out.map(function (x) { return x.trim(); });
+    }
+
+    var head = split(lines[0]).map(function (x) { return x.toLowerCase(); });
+    var need = ["account", "arr", "usage", "adoption", "nps", "tickets", "sponsor"];
+    var missing = need.filter(function (n) { return head.indexOf(n) === -1; });
+    if (missing.length) {
+      return { accounts: [], skipped: 0, error: "Colonnes manquantes : " + missing.join(", ") + "." };
+    }
+    var idx = {};
+    head.forEach(function (h, i) { idx[h] = i; });
+
+    var accounts = [], skipped = 0, i, cells, row, ok, k, v;
+    var limit = Math.min(lines.length, MAX_ROWS + 1);
+    for (i = 1; i < limit; i++) {
+      cells = split(lines[i]);
+      row = {
+        account: String(cells[idx.account] || "").slice(0, 80),
+        tier: idx.tier !== undefined ? String(cells[idx.tier] || "").slice(0, 20) : "",
+        arr: parseNumber(cells[idx.arr]),
+        prev: null
+      };
+      ok = row.account !== "" && row.arr >= 0;
+      for (k = 0; k < FACTORS.length; k++) {
+        v = parseNumber(cells[idx[FACTORS[k]]]);
+        if (!(v >= 0 && v <= 100)) ok = false;
+        row[FACTORS[k]] = v;
+      }
+      if (idx.score_30j !== undefined && cells[idx.score_30j] !== undefined && cells[idx.score_30j] !== "") {
+        v = parseNumber(cells[idx.score_30j]);
+        row.prev = (v >= 0 && v <= 100) ? v : null;
+      }
+      if (ok) { accounts.push(row); } else { skipped += 1; }
+    }
+    if (lines.length - 1 > MAX_ROWS) skipped += lines.length - 1 - MAX_ROWS;
+    if (!accounts.length) {
+      return { accounts: [], skipped: skipped, error: "Aucune ligne valide : vérifiez que les scores sont entre 0 et 100." };
+    }
+    return { accounts: accounts, skipped: skipped, error: null };
+  }
+
+  var api = {
+    FACTORS: FACTORS, LABELS: LABELS, DRIVER_TEXT: DRIVER_TEXT, STATUS_LABEL: STATUS_LABEL,
+    DEFAULT_WEIGHTS: DEFAULT_WEIGHTS, DEFAULT_THRESHOLDS: DEFAULT_THRESHOLDS, DEMO: DEMO,
+    MAX_BYTES: MAX_BYTES,
+    computeScore: computeScore, statusOf: statusOf, mainDriver: mainDriver,
+    evaluate: evaluate, summarize: summarize, fmtMoney: fmtMoney, parseCSV: parseCSV,
+    normThresholds: normThresholds
+  };
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = api;
+  }
+
+  if (typeof document === "undefined") return;
+
+  var state = {
+    accounts: DEMO,
+    weights: Object.assign({}, DEFAULT_WEIGHTS),
+    thresholds: Object.assign({}, DEFAULT_THRESHOLDS),
+    live: false
+  };
+
+  function $(id) { return document.getElementById(id); }
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined) n.textContent = text;
+    return n;
+  }
+
+  function setMsg(text, kind) {
+    var m = $("msg");
+    m.textContent = text || "";
+    m.className = kind || "";
+  }
+
+  var valueLabels = {};
+  var sliderInputs = {};
+
+  function buildSliders() {
+    var box = $("sliders");
+    FACTORS.forEach(function (f) {
+      var wrap = el("div", "field");
+      var row = el("div", "row");
+      var lab = el("label", "", LABELS[f]);
+      lab.setAttribute("for", "w-" + f);
+      var val = el("b", "", state.weights[f] + "%");
+      row.appendChild(lab);
+      row.appendChild(val);
+      var input = document.createElement("input");
+      input.type = "range";
+      input.id = "w-" + f;
+      input.min = "0";
+      input.max = "100";
+      input.step = "1";
+      input.value = String(state.weights[f]);
+      input.addEventListener("input", function () {
+        state.weights[f] = Number(input.value);
+        render();
+      });
+      valueLabels[f] = val;
+      sliderInputs[f] = input;
+      wrap.appendChild(row);
+      wrap.appendChild(input);
+      box.appendChild(wrap);
+    });
+  }
+
+  function td(text, cls) {
+    return el("td", cls || "", text);
+  }
+
+  function render() {
+    var total = 0;
+    FACTORS.forEach(function (f) {
+      total += state.weights[f];
+      valueLabels[f].textContent = state.weights[f] + "%";
+    });
+    $("totalW").textContent = total + "%";
+    var note = $("totalNote");
+    if (total === 0) {
+      note.textContent = "Total à 0 % : augmentez au moins une pondération.";
+      note.className = "note warn";
+    } else if (total !== 100) {
+      note.textContent = "Les pondérations sont ramenées à 100 % au calcul.";
+      note.className = "note warn";
+    } else {
+      note.textContent = "Les pondérations sont ramenées à 100 % au calcul.";
+      note.className = "note";
+    }
+
+    var t = normThresholds(state.thresholds);
+    var results = evaluate(state.accounts, state.weights, t);
+    var sum = summarize(results);
+    $("kCount").textContent = String(sum.count);
+    $("kArr").textContent = fmtMoney(sum.arr);
+    $("kRed").textContent = String(sum.red);
+    $("kRedArr").textContent = fmtMoney(sum.redArr);
+
+    var body = $("rows");
+    body.replaceChildren();
+    results.forEach(function (r) {
+      var tr = document.createElement("tr");
+      tr.appendChild(td(r.account, "name"));
+      tr.appendChild(td(r.tier || "n/d"));
+      tr.appendChild(td(fmtMoney(r.arr), "num"));
+      var cs = document.createElement("td");
+      var pill = el("span", "pill " + r.status, r.score + " · " + STATUS_LABEL[r.status]);
+      cs.appendChild(pill);
+      tr.appendChild(cs);
+      var dText, dCls;
+      if (r.delta === null) { dText = "n/d"; dCls = "d-nul"; }
+      else if (r.delta > 0) { dText = "+" + r.delta + " pts"; dCls = "d-pos"; }
+      else if (r.delta < 0) { dText = r.delta + " pts"; dCls = "d-neg"; }
+      else { dText = "0 pt"; dCls = "d-nul"; }
+      tr.appendChild(td(dText, dCls + " num"));
+      tr.appendChild(td(r.status === "green" ? "Aucun point d'attention" : DRIVER_TEXT[r.driver]));
+      tr.appendChild(td(r.playbook));
+      body.appendChild(tr);
+    });
+
+    var tag = $("sourceTag");
+    tag.textContent = state.live ? "Vos données (CSV)" : "Démo · données synthétiques";
+    tag.className = state.live ? "tag live" : "tag";
+  }
+
+  function handleFile(file) {
+    if (!file) return;
+    if (file.size > MAX_BYTES) {
+      setMsg("Fichier trop volumineux (1 Mo maximum).", "err");
+      return;
+    }
+    var reader = new FileReader();
+    reader.onerror = function () { setMsg("Lecture du fichier impossible.", "err"); };
+    reader.onload = function () {
+      var res = parseCSV(reader.result);
+      if (res.error) { setMsg(res.error, "err"); return; }
+      state.accounts = res.accounts;
+      state.live = true;
+      var msg = res.accounts.length + " comptes importés.";
+      if (res.skipped) msg += " " + res.skipped + " ligne(s) ignorée(s) car invalides.";
+      setMsg(msg, "ok");
+      render();
+    };
+    reader.readAsText(file);
+  }
+
+  function downloadTemplate() {
+    var csv = "account,tier,arr,usage,adoption,nps,tickets,sponsor,score_30j\n" +
+      "Exemple SA,Tier 1,150000,70,60,65,80,55,68\n" +
+      "Exemple SAS,Tier 2,80000,45,50,40,60,35,52\n";
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = "modele-health-score.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+  }
+
+  function reset() {
+    state.accounts = DEMO;
+    state.live = false;
+    state.weights = Object.assign({}, DEFAULT_WEIGHTS);
+    state.thresholds = Object.assign({}, DEFAULT_THRESHOLDS);
+    FACTORS.forEach(function (f) { sliderInputs[f].value = String(state.weights[f]); });
+    $("tRed").value = String(state.thresholds.red);
+    $("tGreen").value = String(state.thresholds.green);
+    $("csvFile").value = "";
+    setMsg("", "");
+    render();
+  }
+
+  buildSliders();
+  $("tRed").addEventListener("input", function (e) { state.thresholds.red = Number(e.target.value); render(); });
+  $("tGreen").addEventListener("input", function (e) { state.thresholds.green = Number(e.target.value); render(); });
+  $("csvFile").addEventListener("change", function (e) { handleFile(e.target.files[0]); });
+  $("tplBtn").addEventListener("click", downloadTemplate);
+  $("resetBtn").addEventListener("click", reset);
+  render();
+})(this);
+</script>
+</body>
+</html>
