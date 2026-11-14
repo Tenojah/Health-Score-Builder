@@ -5,9 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Health Score Builder</title>
 <meta name="description" content="Weight your indicators, spot at-risk accounts and trigger the right playbook. Your data stays in your browser.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#0E1620;
@@ -25,7 +22,7 @@
 html{color-scheme:dark}
 body{
   margin:0;
-  font-family:'Inter',system-ui,sans-serif;
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
   color:var(--ink);
   background-color:var(--bg);
   background-image:
@@ -38,7 +35,7 @@ body{
 @media(min-width:720px){.wrap{padding:40px 40px 56px}}
 header.top{display:flex;flex-wrap:wrap;gap:20px;justify-content:space-between;align-items:flex-start;margin-bottom:28px}
 .eyebrow{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
-h1{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(28px,4vw,38px);line-height:1.1;letter-spacing:-.02em;margin:0 0 8px}
+h1{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:clamp(28px,4vw,38px);line-height:1.1;letter-spacing:-.02em;margin:0 0 8px}
 .sub{margin:0;color:var(--muted);font-size:15px;max-width:60ch}
 .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
 .tag{font-size:13px;font-weight:600;color:var(--amb);background:var(--amb-bg);padding:8px 14px;border-radius:999px}
@@ -52,6 +49,8 @@ h1{font-family:'Space Grotesk','Inter',sans-serif;font-size:clamp(28px,4vw,38px)
 .btn.primary{background:var(--accent);color:#0E1620}
 .btn:hover{filter:brightness(1.1)}
 :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.actions:has(#csvFile:focus-visible) label.btn{outline:3px solid var(--ink);outline-offset:2px}
+.scroll:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .layout{display:flex;flex-wrap:wrap;gap:24px;align-items:flex-start}
 aside.panel{flex:0 0 340px;max-width:100%;width:100%}
 @media(min-width:1000px){aside.panel{width:340px}}
@@ -75,7 +74,7 @@ input[type=range]{width:100%;accent-color:var(--accent);min-height:24px}
 .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
 .kpi .l{font-size:13px;color:var(--muted)}
-.kpi .v{font-family:'Space Grotesk','Inter',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .v{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .kpi .v.r{color:var(--red)}
 .tablehead{display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:baseline;margin-bottom:8px}
 .tablehead h2{margin:0}
@@ -93,13 +92,14 @@ td.num{font-variant-numeric:tabular-nums}
 #msg{min-height:22px;font-size:14px;margin:0}
 #msg.err{color:var(--red)}
 #msg.ok{color:var(--grn)}
+#msg.warn{color:var(--amb)}
 dialog.aboutDlg{width:min(680px,calc(100% - 32px));max-height:calc(100vh - 48px);padding:0;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);overflow:auto}
 dialog.aboutDlg::backdrop{background:rgba(0,0,0,.6)}
 dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
 .aboutClose{position:sticky;top:10px;float:right;margin:10px 10px 0 0;z-index:1;width:44px;height:44px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font-size:22px;line-height:1;cursor:pointer}
 .aboutClose:hover{filter:brightness(.93)}
 .about{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px 24px 10px;margin:0 0 20px}
-.about h2{font-family:'Space Grotesk','Inter',sans-serif;font-size:26px;letter-spacing:-.01em;margin:0 0 14px}
+.about h2{font-family:system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;font-size:26px;letter-spacing:-.01em;margin:0 0 14px}
 .about h3{font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:22px 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line)}
 .about p{margin:0 0 10px;font-size:15px}
 .about .ab-lead{font-size:17px;font-weight:600}
@@ -165,7 +165,7 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
 
 <p id="msg" role="status" aria-live="polite"></p>
 
-<div class="layout">
+<main class="layout">
   <aside class="panel">
     <div class="card">
       <h2>Indicator weights</h2>
@@ -196,8 +196,9 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
         <h2>Accounts to handle first</h2>
         <span>Sorted by status, then ARR</span>
       </div>
-      <div class="scroll">
+      <div class="scroll" tabindex="0" role="region" aria-label="Accounts table, scrollable">
         <table>
+          <caption class="sr">Accounts sorted by status, then ARR</caption>
           <thead>
             <tr>
               <th scope="col">Account</th>
@@ -214,7 +215,7 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
       </div>
     </div>
   </section>
-</div>
+</main>
 
 <p class="privacy">Your data never leaves your browser: nothing is sent to a server. Demo accounts are fictional.</p>
 </div>
@@ -321,7 +322,7 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
       var score = Math.round(computeScore(a, weights));
       var status = statusOf(score, t);
       var driver = mainDriver(a, weights);
-      var delta = (a.prev === null || a.prev === undefined) ? null : score - a.prev;
+      var delta = (a.prev === null || a.prev === undefined) ? null : Math.round((score - a.prev) * 10) / 10;
       return {
         account: a.account, tier: a.tier, arr: a.arr,
         score: score, status: status, driver: driver, delta: delta,
@@ -343,75 +344,124 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
   }
 
   function fmtMoney(v) {
-    if (v >= 1000000) return "€" + (v / 1000000).toFixed(1) + "M";
-    return "€" + Math.round(v / 1000) + "k";
+    if (v >= 999500) return "€" + (v / 1000000).toFixed(1) + "M";
+    if (v >= 1000) return "€" + Math.round(v / 1000) + "k";
+    return "€" + Math.round(v);
   }
 
+  // Strict number parser. Accepts 1234, 1 234, 1,234, 1.234.567, 1,234.5, 1.234,5, 70,5 and a trailing %
+  // or €. Anything else (70abc, 4..8, 1,2,3) is rejected instead of being silently misread.
+  // A lone separator followed by exactly 3 digits after 1-3 leading digits (1,200) is a thousands separator.
   function parseNumber(v) {
-    var n = parseFloat(String(v).replace(/\s/g, "").replace(",", "."));
+    var s = String(v === null || v === undefined ? "" : v).replace(/[\s  ]/g, "").replace(/^€|[€%]$/g, "");
+    if (!s || /[^\d.,]/.test(s)) return NaN;
+    var dots = (s.match(/\./g) || []).length, commas = (s.match(/,/g) || []).length, n, dec, th, parts, sep;
+    if (dots && commas) {
+      dec = s.lastIndexOf(".") > s.lastIndexOf(",") ? "." : ",";
+      th = dec === "." ? "," : ".";
+      parts = s.split(dec);
+      if (parts.length !== 2 || !/^\d+$/.test(parts[1])) return NaN;
+      if (!new RegExp("^\\d{1,3}(" + (th === "." ? "\\." : ",") + "\\d{3})+$").test(parts[0])) return NaN;
+      n = parseFloat(parts[0].split(th).join("") + "." + parts[1]);
+    } else if (dots > 1 || commas > 1) {
+      sep = dots ? "." : ",";
+      if (!new RegExp("^\\d{1,3}(" + (dots ? "\\." : ",") + "\\d{3})+$").test(s)) return NaN;
+      n = parseInt(s.split(sep).join(""), 10);
+    } else if (dots || commas) {
+      sep = dots ? "." : ",";
+      parts = s.split(sep);
+      if (!/^\d+$/.test(parts[0]) || !/^\d+$/.test(parts[1])) return NaN;
+      if (parts[1].length === 3 && parts[0].length <= 3 && parts[0] !== "0") n = parseInt(parts[0] + parts[1], 10);
+      else n = parseFloat(parts[0] + "." + parts[1]);
+    } else {
+      n = parseInt(s, 10);
+    }
     return isFinite(n) ? n : NaN;
   }
 
+  // Split CSV text into records. Handles quoted fields with embedded delimiters, newlines and "" escapes,
+  // and any of \r\n, \n or \r as line break.
+  function splitRecords(text, delim) {
+    var rows = [], row = [], cur = "", q = false, i, c, n = text.length;
+    for (i = 0; i < n; i++) {
+      c = text.charAt(i);
+      if (q) {
+        if (c === '"') {
+          if (text.charAt(i + 1) === '"') { cur += '"'; i++; } else { q = false; }
+        } else { cur += c; }
+      } else if (c === '"') {
+        q = true;
+      } else if (c === delim) {
+        row.push(cur.trim()); cur = "";
+      } else if (c === "\n" || c === "\r") {
+        if (c === "\r" && text.charAt(i + 1) === "\n") i++;
+        row.push(cur.trim()); cur = "";
+        if (row.length > 1 || row[0] !== "") rows.push(row);
+        row = [];
+      } else { cur += c; }
+    }
+    row.push(cur.trim());
+    if (row.length > 1 || row[0] !== "") rows.push(row);
+    return rows;
+  }
+
+  var ALIASES = { name: "account", company: "account", score_30d: "score_30j", prev: "score_30j" };
+
   function parseCSV(text) {
     text = String(text).replace(/^﻿/, "");
-    var lines = text.split(/\r?\n/).filter(function (l) { return l.trim() !== ""; });
-    if (lines.length < 2) {
-      return { accounts: [], skipped: 0, error: "The file must contain a header and at least one row." };
+    var firstLine = text.split(/\r\n|\n|\r/)[0] || "";
+    var delim = firstLine.split(";").length > firstLine.split(",").length ? ";" : ",";
+    var recs = splitRecords(text, delim);
+    if (recs.length < 2) {
+      return { accounts: [], skipped: 0, duplicates: 0, issues: [], error: "The file must contain a header and at least one row." };
     }
-    var delim = lines[0].split(";").length > lines[0].split(",").length ? ";" : ",";
-
-    function split(line) {
-      var out = [], cur = "", q = false, i, c;
-      for (i = 0; i < line.length; i++) {
-        c = line.charAt(i);
-        if (c === '"') {
-          if (q && line.charAt(i + 1) === '"') { cur += '"'; i++; } else { q = !q; }
-        } else if (c === delim && !q) {
-          out.push(cur); cur = "";
-        } else {
-          cur += c;
-        }
-      }
-      out.push(cur);
-      return out.map(function (x) { return x.trim(); });
-    }
-
-    var head = split(lines[0]).map(function (x) { return x.toLowerCase(); });
+    var head = recs[0].map(function (x) { x = x.toLowerCase(); return ALIASES[x] || x; });
     var need = ["account", "arr", "usage", "adoption", "nps", "tickets", "sponsor"];
     var missing = need.filter(function (n) { return head.indexOf(n) === -1; });
     if (missing.length) {
-      return { accounts: [], skipped: 0, error: "Missing columns: " + missing.join(", ") + "." };
+      return { accounts: [], skipped: 0, duplicates: 0, issues: [], error: "Missing columns: " + missing.join(", ") + "." };
     }
     var idx = {};
-    head.forEach(function (h, i) { idx[h] = i; });
+    head.forEach(function (h, i) { if (idx[h] === undefined) idx[h] = i; });
 
-    var accounts = [], skipped = 0, i, cells, row, ok, k, v;
-    var limit = Math.min(lines.length, MAX_ROWS + 1);
+    var accounts = [], seen = {}, skipped = 0, duplicates = 0, issues = [], i, cells, row, k, v, why;
+    var limit = Math.min(recs.length, MAX_ROWS + 1);
+    function flag(line, reason) {
+      skipped += 1;
+      if (issues.length < 5) issues.push("row " + line + ": " + reason);
+    }
     for (i = 1; i < limit; i++) {
-      cells = split(lines[i]);
+      cells = recs[i];
       row = {
         account: String(cells[idx.account] || "").slice(0, 80),
         tier: idx.tier !== undefined ? String(cells[idx.tier] || "").slice(0, 20) : "",
         arr: parseNumber(cells[idx.arr]),
         prev: null
       };
-      ok = row.account !== "" && row.arr >= 0;
-      for (k = 0; k < FACTORS.length; k++) {
+      why = "";
+      if (row.account === "") why = "account name is empty";
+      else if (!(row.arr >= 0)) why = "arr is missing or invalid";
+      for (k = 0; k < FACTORS.length && !why; k++) {
         v = parseNumber(cells[idx[FACTORS[k]]]);
-        if (!(v >= 0 && v <= 100)) ok = false;
+        if (!(v >= 0 && v <= 100)) why = FACTORS[k] + " must be a number from 0 to 100";
         row[FACTORS[k]] = v;
       }
+      if (why) { flag(i + 1, why); continue; }
       if (idx.score_30j !== undefined && cells[idx.score_30j] !== undefined && cells[idx.score_30j] !== "") {
         v = parseNumber(cells[idx.score_30j]);
         row.prev = (v >= 0 && v <= 100) ? v : null;
       }
-      if (ok) { accounts.push(row); } else { skipped += 1; }
+      k = row.account.toLowerCase();
+      if (seen[k]) { duplicates += 1; if (issues.length < 5) issues.push("row " + (i + 1) + ": duplicate account \"" + row.account + "\" ignored"); continue; }
+      seen[k] = true;
+      accounts.push(row);
     }
-    if (lines.length - 1 > MAX_ROWS) skipped += lines.length - 1 - MAX_ROWS;
+    var truncated = recs.length - 1 > MAX_ROWS ? recs.length - 1 - MAX_ROWS : 0;
     if (!accounts.length) {
-      return { accounts: [], skipped: skipped, error: "No valid row: check that scores are between 0 and 100." };
+      return { accounts: [], skipped: skipped, duplicates: duplicates, issues: issues, truncated: truncated,
+        error: "No valid row." + (issues.length ? " First issue, " + issues[0] + "." : "") };
     }
-    return { accounts: accounts, skipped: skipped, error: null };
+    return { accounts: accounts, skipped: skipped, duplicates: duplicates, issues: issues, truncated: truncated, error: null };
   }
 
   var api = {
@@ -420,7 +470,7 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
     MAX_BYTES: MAX_BYTES,
     computeScore: computeScore, statusOf: statusOf, mainDriver: mainDriver,
     evaluate: evaluate, summarize: summarize, fmtMoney: fmtMoney, parseCSV: parseCSV,
-    normThresholds: normThresholds
+    normThresholds: normThresholds, parseNumber: parseNumber
   };
 
   if (typeof module !== "undefined" && module.exports) {
@@ -471,8 +521,10 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
       input.max = "100";
       input.step = "1";
       input.value = String(state.weights[f]);
+      input.setAttribute("aria-valuetext", state.weights[f] + "%");
       input.addEventListener("input", function () {
         state.weights[f] = Number(input.value);
+        input.setAttribute("aria-valuetext", state.weights[f] + "%");
         render();
       });
       valueLabels[f] = val;
@@ -541,6 +593,11 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
     tag.className = state.live ? "tag live" : "tag";
   }
 
+  function decodeText(buf) {
+    try { return new TextDecoder("utf-8", { fatal: true }).decode(buf); }
+    catch (e) { return new TextDecoder("windows-1252").decode(buf); }
+  }
+
   function handleFile(file) {
     if (!file) return;
     if (file.size > MAX_BYTES) {
@@ -550,16 +607,19 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
     var reader = new FileReader();
     reader.onerror = function () { setMsg("Could not read the file.", "err"); };
     reader.onload = function () {
-      var res = parseCSV(reader.result);
+      var res = parseCSV(decodeText(reader.result));
       if (res.error) { setMsg(res.error, "err"); return; }
       state.accounts = res.accounts;
       state.live = true;
       var msg = res.accounts.length + " accounts imported.";
       if (res.skipped) msg += " " + res.skipped + " invalid row(s) skipped.";
-      setMsg(msg, "ok");
+      if (res.duplicates) msg += " " + res.duplicates + " duplicate(s) ignored.";
+      if (res.truncated) msg += " " + res.truncated + " row(s) beyond the " + MAX_ROWS + "-row limit ignored.";
+      if (res.issues && res.issues.length) msg += " " + res.issues.join("; ") + ".";
+      setMsg(msg, res.skipped || res.duplicates || res.truncated ? "warn" : "ok");
       render();
     };
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
   }
 
   function downloadTemplate() {
@@ -593,13 +653,14 @@ dialog.aboutDlg .about{border:0;border-radius:0;margin:0;padding:22px 24px 14px}
   buildSliders();
   $("tRed").addEventListener("input", function (e) { state.thresholds.red = Number(e.target.value); render(); });
   $("tGreen").addEventListener("input", function (e) { state.thresholds.green = Number(e.target.value); render(); });
-  $("csvFile").addEventListener("change", function (e) { handleFile(e.target.files[0]); });
+  $("csvFile").addEventListener("change", function (e) { handleFile(e.target.files[0]); e.target.value = ""; });
   $("tplBtn").addEventListener("click", downloadTemplate);
   $("resetBtn").addEventListener("click", reset);
   render();
 })(this);
 
 (function () {
+  if (typeof document === "undefined") return;
   var dlg = document.getElementById("aboutDlg"), btn = document.getElementById("aboutBtn");
   if (!dlg || !btn || typeof dlg.showModal !== "function") return;
   btn.addEventListener("click", function () { dlg.showModal(); });
